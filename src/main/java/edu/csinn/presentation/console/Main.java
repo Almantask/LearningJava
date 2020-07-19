@@ -1,4 +1,4 @@
-package edu.csinn.presentation;
+package edu.csinn.presentation.console;
 
 import edu.csinn.calculators.BasicCalculator;
 
