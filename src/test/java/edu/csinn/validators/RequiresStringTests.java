@@ -10,6 +10,13 @@ import static org.assertj.core.api.Assertions.*;
 
 public class RequiresStringTests {
     @Test
+    void new_doesNotThrow(){
+        Throwable thrown = catchThrowable(() -> new Requires());
+
+        assertThat(thrown).doesNotThrowAnyException();
+    }
+
+    @Test
     void notNullOrEmpty_when_notNullOrEmptyString_doesNotThrow(){
         var input = "a";
 

@@ -8,12 +8,12 @@ public class BasicCalculator {
     private double result = 0;
 
     public void add(double number){
-       Arithmetic.notOverflow(number, (number1, number2) -> number1 + number2);
+       Arithmetic.notOverflow(number, result, (number1, number2) -> number1 + number2);
        result += number;
     }
 
     public void take(double number){
-        Arithmetic.notOverflow(number, (number1, number2) -> number1 - number2);
+        Arithmetic.notOverflow(number, result, (number1, number2) -> number1 - number2);
         result -= number;
     }
 
@@ -23,7 +23,7 @@ public class BasicCalculator {
     }
 
     public void mul(double number){
-        Arithmetic.notOverflow(number, (number1, number2) -> number1 * number2);
+        Arithmetic.notOverflow(number, result, (number1, number2) -> number1 * number2);
         result *= number;
     }
 }

@@ -1,13 +1,10 @@
 package edu.csinn.calculators;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -29,22 +26,72 @@ public class BasicCalculatorTests {
         assertThat(calculator.getResult()).isEqualTo(expected);
     }
 
+    @ParameterizedTest(name = "0 - {0} = {1}")
+    @CsvSource({
+            "1, -1",
+            "0, 0",
+            "-1, 1",
+            Double.MAX_VALUE + ", "+ -Double.MAX_VALUE
+    })
+    void take_when_anyNumber_differenceWithResult(double number, double expected) {
+        calculator.take(number);
+
+        assertThat(calculator.getResult()).isEqualTo(expected);
+    }
+
+    @ParameterizedTest(name = "{0} / {1} = {2}")
+    @CsvSource({
+            "0,  1, 0",
+            "-1, 1, -1",
+            "6,  3, 2",
+            Double.MAX_VALUE + ", -1, " + -Double.MAX_VALUE
+    })
+    void div_when_anyNumber_resultDivided(double initial, double number, double expected) {
+        // Arrange
+        calculator.add(initial);
+
+        // Act
+        calculator.div(number);
+
+        // Assert
+        assertThat(calculator.getResult()).isEqualTo(expected);
+    }
+
+    @ParameterizedTest(name = "{0} * {1} = {2}")
+    @CsvSource({
+            "0,  1, 0",
+            "1,  0, 0",
+            "-1, 1, -1",
+            "2,  3, 6",
+            Double.MAX_VALUE + ", -1, " + -Double.MAX_VALUE
+    })
+    void mul_when_anyNumber_resultMultiplied(double initial, double number, double expected) {
+        // Arrange
+        calculator.add(initial);
+
+        // Act
+        calculator.mul(number);
+
+        // Assert
+        assertThat(calculator.getResult()).isEqualTo(expected);
+    }
+
     @Test
     void add_when_resultIsOverflow_throws_ArithmeticException(){
         calculator.add(Double.MAX_VALUE);
 
-        Throwable thrown = catchThrowable(() -> calculator.add(1));
+        Throwable thrown = catchThrowable(() -> calculator.add(Double.MAX_VALUE));
 
-        assertThat(thrown).hasMessageContaining("Trying to add 1");
+        assertThat(thrown).hasMessageContaining("resulted in an overflow");
     }
 
     @Test
     void take_when_resultIsOverflow_throws_ArithmeticException(){
         calculator.take(Double.MAX_VALUE);
 
-        Throwable thrown = catchThrowable(() -> calculator.take(1));
+        Throwable thrown = catchThrowable(() -> calculator.take(Double.MAX_VALUE));
 
-        assertThat(thrown).hasMessageContaining("Trying to take 1");
+        assertThat(thrown).hasMessageContaining("resulted in an overflow");
     }
 
     @Test
@@ -53,7 +100,7 @@ public class BasicCalculatorTests {
 
         Throwable thrown = catchThrowable(() -> calculator.mul(1.1));
 
-        assertThat(thrown).hasMessageContaining("Trying to multiply 1.1");
+        assertThat(thrown).hasMessageContaining("resulted in an overflow");
     }
 
     @Test
@@ -61,19 +108,6 @@ public class BasicCalculatorTests {
         Throwable thrown = catchThrowable(() -> calculator.div(0));
 
         assertThatExceptionOfType(ArithmeticException.class).isThrownBy(() -> {throw thrown;});
-    }
-
-    @ParameterizedTest(name = "0 - {0} = {1}")
-    @CsvSource({
-            "1,    -1",
-            "0,    0",
-            "-1,  1",
-            Double.MAX_VALUE + ", "+ -Double.MAX_VALUE
-    })
-    void take_when_anyNumber_differenceWithResult(double number, double expected) {
-        calculator.take(number);
-
-        assertThat(calculator.getResult()).isEqualTo(expected);
     }
 
     private static Stream<Arguments> getAddCalculatorAddExpectations() {
